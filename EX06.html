@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>EX06</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    background: #f5f5f5;
+  }
+  h2 { color: #2563eb; }
+  #gameContainer {
+    border: 2px solid #2563eb;
+    padding: 15px;
+    border-radius: 10px;
+    background: #e0f2fe;
+    display: inline-block;
+    margin-bottom: 20px;
+  }
+  input { width: 50px; padding: 5px; margin-right: 10px; }
+  button { padding: 10px 15px; margin: 5px; cursor: pointer; }
+ #numbers {
+    margin: 20px auto;      /* เว้นบน-ล่าง 20px, ซ้าย-ขวากลาง */
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;     /* ข้อความกึ่งกลาง */
+    width: fit-content;     /* ให้ความกว้างพอดีกับเนื้อหา */
+}
+  #resultMsg { margin-top: 15px; font-weight: bold; font-size: 18px; }
+  #answer { margin-top: 10px; font-weight: bold; font-size: 18px; color: blue; }
+</style>
+</head>
+<body>
+
+<h2>EX06</h2>
+
+<div id="gameContainer">
+    <label>กรอกจำนวนตัวเลข *(Min 2): </label>
+    <input type="number" id="numCount" min="2" placeholder="">
+    <button onclick="generateGame()">submit</button>
+
+    <div id="numbers"></div>
+    <div id="buttons"></div>
+    <div id="resultMsg"></div>
+    <div id="answer"></div>
+</div>
+
+<script>
+function generateRandomNumber() {
+    return Math.floor(Math.random() * 1001); // 0-1000
+}
+
+function generateGame() {
+    let n = parseInt(document.getElementById('numCount').value);
+    if (isNaN(n) || n < 2) n = 5;
+
+    let numbers = [];
+    for (let i = 0; i < n; i++) {
+        let num = Math.floor(Math.random() * 1001);
+        num *= Math.random() < 0.5 ? 1 : -1; // ±
+        numbers.push(num);
+    }
+
+    let signs = [];
+    for (let i = 0; i < n - 1; i++) {
+        signs.push(Math.random() < 0.5 ? '+' : '-');
+    }
+
+    let sum = numbers[0];
+    for (let i = 1; i < n; i++) {
+        if (signs[i-1] === '+') sum += numbers[i];
+        else sum -= numbers[i];
+    }
+
+    let displayNumbers = [numbers[0]];
+    for (let i = 0; i < signs.length; i++) {
+        displayNumbers.push(`<span style="color:red;"> ${signs[i]} </span>`);
+        displayNumbers.push(numbers[i+1]);
+    }
+    document.getElementById('numbers').innerHTML = displayNumbers.join('');
+
+    let buttonValues = [sum];
+    while (buttonValues.length < 9) {
+        let fake = sum + Math.floor(Math.random() * 1001) - 500;
+        if (!buttonValues.includes(fake)) buttonValues.push(fake);
+    }
+    buttonValues.sort(() => Math.random() - 0.5);
+
+    let buttonsDiv = document.getElementById('buttons');
+    buttonsDiv.innerHTML = '';
+    buttonValues.forEach(val => {
+        let btn = document.createElement('button');
+        btn.textContent = val;
+        btn.onclick = () => {
+            let msgDiv = document.getElementById('resultMsg');
+            if (val === sum) {
+                msgDiv.textContent = "✅ ถูกต้อง!";
+                msgDiv.style.color = "green";
+            } else {
+                msgDiv.textContent = "❌ ผิด!";
+                msgDiv.style.color = "red";
+            }
+            setTimeout(generateGame, 800);
+        };
+        buttonsDiv.appendChild(btn);
+    });
+
+    document.getElementById('resultMsg').textContent = '';
+}
+
+// เริ่มเกมทันที
+generateGame();
+</script>
+
+</body>
+</html>
