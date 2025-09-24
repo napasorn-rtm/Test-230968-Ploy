@@ -2,14 +2,14 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<title>EX05</title>
+<title>EX05 - ลำต้นตรงกลาง ตัวเลขชิดขวา</title>
 <style>
   body {
     font-family: "Segoe UI", Tahoma, sans-serif;
     padding: 20px;
     background: #f0f9ff;
   }
-  h2 { color: #2563eb; }
+  h2 { color: #2563eb; text-align: center; }
   input, button {
     padding: 8px 12px;
     border-radius: 8px;
@@ -29,34 +29,42 @@
     border-radius: 10px;
     font-family: monospace;
     margin-top: 20px;
+    position: relative;
   }
   .bush-label {
     color: #00db33;
     font-weight: bold;
     text-align: center;
     margin: 10px 0 5px 0;
+    font-size: 24px;   
   }
-  .tree-row {
+  .tree-row, .trunk {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     margin-bottom: 2px;
+    font-family: monospace;
+    position: relative;
+    font-size: 24px;   
   }
   .stars {
-    white-space: pre; /* ให้ช่องว่างทำงาน */
-    flex-shrink: 0;
-  }
+  white-space: pre;       
+  display: inline-block;  
+  width: 20%;            
+  text-align: center;     
+  font-size: 32px;        
+  line-height: 1;        
+}
+
   .row-number {
-    text-align: right;
+    font-size: 32px;   
     color: red;
-    flex-shrink: 0;
-    margin-left: 10px;
+    position: absolute;
+    right: 0;
   }
-  .trunk {
-    display: flex;
-    justify-content: center;
-    margin-top: 5px;
-  }
+  label {
+  font-size: 24px;
+}
+
 </style>
 </head>
 <body>
@@ -80,24 +88,26 @@ function generateTree() {
     return;
   }
 
+  // วาดพุ่ม
   for (let p = 1; p <= n; p++) {
-    // แสดงชื่อพุ่ม
     const bushLabel = document.createElement("div");
     bushLabel.className = "bush-label";
-    bushLabel.textContent = `🌲 พุ่มที่ ${p}`;
+    bushLabel.textContent = `🌲${p}`;
     out.appendChild(bushLabel);
 
-    for (let row = 1; row <= n; row++) {
+   for (let row = 1; row <= n; row++) {
       const rowDiv = document.createElement("div");
       rowDiv.className = "tree-row";
 
       // ช่องว่าง (ด้านซ้าย) + ดอกจันทร์
-      const spaces = " ".repeat(n - row);
-      const stars = "*".repeat(row * 2 - 1);
+      //const spaces = " ".repeat(n - row);
+      const stars = "*".repeat(row);
 
       const starsSpan = document.createElement("span");
       starsSpan.className = "stars";
-      starsSpan.textContent = spaces + stars;
+      //starsSpan.textContent = spaces + stars;
+      starsSpan.textContent = stars;
+
 
       const rowNum = document.createElement("span");
       rowNum.className = "row-number";
@@ -108,33 +118,33 @@ function generateTree() {
 
       out.appendChild(rowDiv);
     }
-  }
+}
 
-  // ลำต้น
+  // วาดลำต้น
   const trunkLabel = document.createElement("div");
-  trunkLabel.textContent = `🌳 ลำต้น `;
+  trunkLabel.textContent = `🌳 ลำต้น`;
   trunkLabel.style.textAlign = "center";
+  trunkLabel.style.marginTop = "10px";
   out.appendChild(trunkLabel);
 
+  //const leftSpaces = " ".repeat(Math.floor(n / 2));
   for (let t = 1; t <= n; t++) {
-
     const trunkDiv = document.createElement("div");
-trunkDiv.className = "trunk";
-trunkDiv.style.display = "flex";
-trunkDiv.style.justifyContent = "center"; // อยู่ตรงกลาง
-trunkDiv.style.width = "100%";
+    trunkDiv.className = "trunk";
 
-const starsSpan = document.createElement("span");
-starsSpan.textContent = "**";
-starsSpan.style.marginRight = "50px"; // ปรับระยะห่างตามต้องการ
+    const starsSpan = document.createElement("span");
+    starsSpan.className = "stars";
+    //starsSpan.textContent = leftSpaces + "**"; // ตรงกลาง
+    starsSpan.textContent = "**"; // ตรงกลาง
 
-const rowNum = document.createElement("span");
-rowNum.textContent = `(${t})`;
 
-trunkDiv.appendChild(starsSpan);
-trunkDiv.appendChild(rowNum);
-out.appendChild(trunkDiv);
+    const rowNum = document.createElement("span");
+    rowNum.className = "row-number";
+    rowNum.textContent = `(${t})`;
 
+    trunkDiv.appendChild(starsSpan);
+    trunkDiv.appendChild(rowNum);
+    out.appendChild(trunkDiv);
   }
 }
 </script>
